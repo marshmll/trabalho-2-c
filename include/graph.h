@@ -1,10 +1,13 @@
 #include <stdlib.h>
+#include <float.h>
+#include <stdbool.h>
+#include <string.h>
 
 /* TYPEDEFS ======================================================================================= */
 
 typedef struct Node
 {
-    unsigned int vertex;
+    char vertex;
 } Node;
 
 typedef struct Edge
@@ -16,7 +19,7 @@ typedef struct Edge
 
 typedef struct AdjList
 {
-    unsigned int vertex;
+    char vertex;
     Edge *head;
     struct AdjList *next;
 } AdjList;
@@ -28,13 +31,13 @@ typedef struct
 
 /* FUNÇÕES AUXILIARES ============================================================================= */
 
-Node *create_node(unsigned int vertex);
+Node *create_node(char vertex);
 
 Graph *create_graph();
 
-AdjList *add_adj_list(Graph *graph, unsigned int vertex);
+AdjList *add_adj_list(Graph *graph, char vertex);
 
-void add_edge(Graph *graph, unsigned int src_vertex, unsigned int dst_vertex, float weight);
+void add_edge(Graph *graph, char src_vertex, char dst_vertex, float weight);
 
 void free_graph(Graph *graph);
 
@@ -42,4 +45,6 @@ void free_edges(Edge *head);
 
 void free_adj_lists(AdjList *head);
 
-AdjList *get_adj_list_from_vertex(Graph *graph, unsigned int vertex);
+AdjList *get_adj_list_from_vertex(Graph *graph, char vertex);
+
+void find_shortest_path_between(Graph *graph, char start_vertex, char target_vertex);

@@ -2,6 +2,8 @@
     "C_Cpp.default.compilerPath": "/usr/bin/gcc",
     "files.associations": {
         "stdio.h": "c",
-        "graph.h": "c"
+        "graph.h": "c",
+        "bin_gen.h": "c",
+        "float.h": "c"
     }
 }
