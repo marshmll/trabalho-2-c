@@ -2,11 +2,19 @@ SRC_FOLDER=src
 INCLUDE_FOLDER=include
 BUILD_FOLDER=build
 
-data.bin: binutil pontos.txt vizinhos.txt
+CFLAGS=-Wall -g
+
+all: main data.bin
+	${BUILD_FOLDER}/main data.bin
+
+main: ${SRC_FOLDER}/main.c ${SRC_FOLDER}/graph.c ${SRC_FOLDER}/binutils.c
+	gcc $^ ${CFLAGS} -I ${INCLUDE_FOLDER} -lm -o ${BUILD_FOLDER}/$@
+
+data.bin: bingen pontos.txt vizinhos.txt
 	./${BUILD_FOLDER}/$< pontos.txt vizinhos.txt
 
-binutil: ${SRC_FOLDER}/input.c ${SRC_FOLDER}/binutil.c
-	gcc $^ -I ${INCLUDE_FOLDER} -lm -o ${BUILD_FOLDER}/$@
+bingen: ${SRC_FOLDER}/input.c ${SRC_FOLDER}/graph.c ${SRC_FOLDER}/bingen.c
+	gcc $^ ${CFLAGS} -I ${INCLUDE_FOLDER} -lm -o ${BUILD_FOLDER}/$@
 
 clean:
 	find . -type f -executable -exec rm '{}' \;

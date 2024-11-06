@@ -1,6 +1,58 @@
 #include <stdio.h>
 #include "graph.h"
 
+Graph *create_graph()
+{
+    Graph *graph = (Graph *)calloc(1, sizeof(Graph));
+    graph->list = NULL;
+
+    return graph;
+}
+
+Node *get_node_by_vertex(NodeList *list, char vertex)
+{
+    Node *found = NULL;
+
+    for (Node *node = list->head; node != NULL; node = node->next)
+        if (node->vertex == vertex)
+            found = node;
+
+    return found;
+}
+
+void free_graph(Graph *graph)
+{
+    free_node_list(graph->list);
+    free(graph);
+}
+
+void free_node_list(NodeList *list)
+{
+    free_nodes(list->head);
+    free(list);
+}
+
+void free_nodes(Node *head)
+{
+    if (head != NULL)
+    {
+        free_nodes(head->next);
+
+        if (head->north != NULL)
+            free(head->north);
+
+        if (head->south != NULL)
+            free(head->south);
+
+        if (head->east != NULL)
+            free(head->east);
+
+        if (head->west != NULL)
+            free(head->west);
+
+        free(head);
+    }
+}
 
 void find_shortest_path_between(Graph *graph, char start_vertex, char target_vertex)
 {
@@ -76,36 +128,42 @@ void find_shortest_path_between(Graph *graph, char start_vertex, char target_ver
         else
         {
             // Atualiza os custos para os vértices adjacentes.
-            AdjList *current_list = get_adj_list_from_vertex(graph, current_vertex);
+            Node *current_node = get_node_by_vertex(graph->list, current_vertex);
 
-            if (current_list != NULL)
+            if (current_node != NULL)
             {
-                for (Edge *edge = current_list->head; edge != NULL; edge = edge->next)
+                Edge *current_node_edges[] = {current_node->north, current_node->south, current_node->east, current_node->west};
+                for (int i = 0; i < 4; i++)
                 {
-                    char neighbor = edge->dst->vertex;
+                    Edge *edge = current_node_edges[i];
 
-                    // Calcula o novo custo como sendo o custo do vértice atual mais o
-                    // custo do vértice adjacente
-                    float new_cost = costs[(int)current_vertex] + edge->weight;
-
-                    // Se o custo calculado é menor do que o custo anterior do vértice adjacente
-                    if (new_cost < costs[(int)neighbor])
+                    if (edge != NULL)
                     {
-                        // Atualiza o custo para o menor e adiciona ao predecessores.
-                        costs[(int)neighbor] = new_cost;
-                        predecessors[(int)neighbor] = current_vertex;
+                        char neighbor = edge->dst;
 
-                        // Procura se o vértice adjacente já está na fila de prioridade
-                        bool found = false;
-                        for (int i = 0; i < queue_size; i++)
+                        // Calcula o novo custo como sendo o custo do vértice atual mais o
+                        // custo do vértice adjacente
+                        float new_cost = costs[(int)current_vertex] + edge->weight;
+
+                        // Se o custo calculado é menor do que o custo anterior do vértice adjacente
+                        if (new_cost < costs[(int)neighbor])
                         {
-                            if (priority_queue[i] == neighbor)
-                                found = true;
-                        }
+                            // Atualiza o custo para o menor e adiciona ao predecessores.
+                            costs[(int)neighbor] = new_cost;
+                            predecessors[(int)neighbor] = current_vertex;
 
-                        // Se não, adiciona-o.
-                        if (!found)
-                            priority_queue[queue_size++] = neighbor;
+                            // Procura se o vértice adjacente já está na fila de prioridade
+                            bool found = false;
+                            for (int i = 0; i < queue_size; i++)
+                            {
+                                if (priority_queue[i] == neighbor)
+                                    found = true;
+                            }
+
+                            // Se não, adiciona-o.
+                            if (!found)
+                                priority_queue[queue_size++] = neighbor;
+                        }
                     }
                 }
             }
