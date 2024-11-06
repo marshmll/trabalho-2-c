@@ -1,10 +1,12 @@
-INCLUDE_FOLDER=include/
+SRC_FOLDER=src
+INCLUDE_FOLDER=include
+BUILD_FOLDER=build
 
 data.bin: binutil pontos.txt vizinhos.txt
-	./$< pontos.txt vizinhos.txt
+	./${BUILD_FOLDER}/$< pontos.txt vizinhos.txt
 
-binutil: input.c binutil.c
-	gcc $^ -I ${INCLUDE_FOLDER} -lm -o $@
+binutil: ${SRC_FOLDER}/input.c ${SRC_FOLDER}/binutil.c
+	gcc $^ -I ${INCLUDE_FOLDER} -lm -o ${BUILD_FOLDER}/$@
 
 clean:
 	find . -type f -executable -exec rm '{}' \;
