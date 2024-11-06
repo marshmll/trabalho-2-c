@@ -47,9 +47,7 @@ void add_edge(Graph *graph, char src_vertex, char dst_vertex, float weight)
 void free_graph(Graph *graph)
 {
     for (AdjList *list = graph->adj_lists; list != NULL; list = list->next)
-    {
         free_edges(list->head);
-    }
 
     free_adj_lists(graph->adj_lists);
     free(graph);

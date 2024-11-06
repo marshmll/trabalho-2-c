@@ -1,3 +1,6 @@
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include <stdlib.h>
 #include <float.h>
 #include <stdbool.h>
@@ -48,3 +51,5 @@ void free_adj_lists(AdjList *head);
 AdjList *get_adj_list_from_vertex(Graph *graph, char vertex);
 
 void find_shortest_path_between(Graph *graph, char start_vertex, char target_vertex);
+
+#endif

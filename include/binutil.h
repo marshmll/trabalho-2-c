@@ -1,3 +1,6 @@
+#ifndef BINUTIL_H
+#define BINUTIL_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,3 +62,5 @@ void free_neighbours_list(NeighbourList *list);
 Crossing *get_crossing_by_point_name(CrossingList *crossing_list, char pname);
 
 bool write_bin_data(char *fname, CrossingList *crossing_list, NeighbourList *neighbour_list);
+
+#endif /* INPUT_H */
