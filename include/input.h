@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#define MAX_STR_LEN 50
+#define MAX_STR_LEN 150
 
 #include <stdio.h>
 #include <string.h>

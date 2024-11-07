@@ -2,9 +2,9 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 3)
+    if (argc != 4)
     {
-        printf("Modo de uso: %s <pontos> <vizinhos>\n", argv[0]);
+        printf("Modo de uso: %s <pontos.txt> <vizinhos.txt> <saida.bin>\n", argv[0]);
         exit(1);
     }
 
@@ -13,6 +13,9 @@ int main(int argc, char **argv)
 
     char neighbours_fname[MAX_STR_LEN];
     strcpy(neighbours_fname, argv[2]);
+
+    char bin_fname[MAX_STR_LEN];
+    strcpy(bin_fname, argv[3]);
 
     FILE *points_file = fopen(points_fname, "r");
 
@@ -35,7 +38,7 @@ int main(int argc, char **argv)
 
     read_edges_from_file(neighbours_file, node_list);
 
-    write_bin_data(node_list, OUTPUT_FNAME);
+    write_bin_data(node_list, bin_fname);
 
     free_node_list(node_list);
 
@@ -117,12 +120,12 @@ void read_edges_from_file(FILE *neighbours_file, NodeList *list)
 
             if (delta_x > 0.0)
             {
-                strcpy(edge->direction, "Leste");
+                strcpy(edge->direction, "Oeste");
                 src_node->east = edge;
             }
             else if (delta_x < 0.0)
             {
-                strcpy(edge->direction, "Oeste");
+                strcpy(edge->direction, "Leste");
                 src_node->west = edge;
             }
             else if (delta_y > 0.0)

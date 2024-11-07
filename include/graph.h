@@ -45,11 +45,25 @@ typedef struct
 } Graph;
 #pragma pack()
 
+typedef struct PathNode
+{
+    char src, dst;
+    char street_1[MAX_STR_LEN];
+    char street_2[MAX_STR_LEN];
+    char conn_street[MAX_STR_LEN];
+    char direction[MAX_STR_LEN];
+    struct PathNode *next;
+} PathNode;
+
 /* FUNÇÕES AUXILIARES ============================================================================= */
 
 Graph *create_graph();
 
 Node *get_node_by_vertex(NodeList *list, char vertex);
+
+Edge *get_edge_by_dst_vertex(Node *node, char vertex);
+
+char *get_instruction_from_orientation_diff(char *orientation_1, char *orientation_2);
 
 void free_graph(Graph *graph);
 

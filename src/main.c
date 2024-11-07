@@ -12,9 +12,9 @@ int main(int argc, char **argv)
     }
 
     Graph *graph = create_graph();
-    graph->list = parse_data_from_bin_file(OUTPUT_FNAME);
+    graph->list = parse_data_from_bin_file(argv[1]);
 
-    find_shortest_path_between(graph, 'A', 'F');
+    find_shortest_path_between(graph, 'A', 'E');
 
     free_graph(graph);
 }

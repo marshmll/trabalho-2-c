@@ -20,6 +20,53 @@ Node *get_node_by_vertex(NodeList *list, char vertex)
     return found;
 }
 
+Edge *get_edge_by_dst_vertex(Node *node, char vertex)
+{
+    if (node->north != NULL && node->north->dst == vertex)
+        return node->north;
+
+    if (node->south != NULL && node->south->dst == vertex)
+        return node->south;
+
+    if (node->east != NULL && node->east->dst == vertex)
+        return node->east;
+
+    if (node->west != NULL && node->west->dst == vertex)
+        return node->west;
+
+    return NULL;
+}
+
+char *get_instruction_from_orientation_diff(char *orientation_1, char *orientation_2)
+{
+    char *direction = (char *)calloc(MAX_STR_LEN, sizeof(char));
+
+    if (strcmp(orientation_1, orientation_2) == 0)
+        strcpy(direction, "mantenha-se na mesma direção.");
+    else
+    {
+        if (strcmp(orientation_1, "Norte") == 0 && strcmp(orientation_2, "Leste") == 0)
+            strcpy(direction, "vire à direita.");
+        else if (strcmp(orientation_1, "Leste") == 0 && strcmp(orientation_2, "Sul") == 0)
+            strcpy(direction, "vire à direita.");
+        else if (strcmp(orientation_1, "Sul") == 0 && strcmp(orientation_2, "Oeste") == 0)
+            strcpy(direction, "vire à direita.");
+        else if (strcmp(orientation_1, "Oeste") == 0 && strcmp(orientation_2, "Norte") == 0)
+            strcpy(direction, "vire à direita.");
+
+        if (strcmp(orientation_1, "Norte") == 0 && strcmp(orientation_2, "Oeste") == 0)
+            strcpy(direction, "vire à esquerda.");
+        else if (strcmp(orientation_1, "Oeste") == 0 && strcmp(orientation_2, "Sul") == 0)
+            strcpy(direction, "vire à esquerda.");
+        else if (strcmp(orientation_1, "Sul") == 0 && strcmp(orientation_2, "Leste") == 0)
+            strcpy(direction, "vire à esquerda.");
+        else if (strcmp(orientation_1, "Leste") == 0 && strcmp(orientation_2, "Norte") == 0)
+            strcpy(direction, "vire à esquerda.");
+    }
+
+    return direction;
+}
+
 void free_graph(Graph *graph)
 {
     free_node_list(graph->list);
@@ -109,22 +156,51 @@ void find_shortest_path_between(Graph *graph, char start_vertex, char target_ver
         if (current_vertex == target_vertex)
         {
             printf("Menor distância entre %c e %c: %.2f\n", start_vertex, target_vertex, costs[(int)current_vertex]);
-            printf("Caminho: ");
-            char path[256];
-            int path_index = 0;
+            printf("Caminho:\n");
+
+            // Armazena o caminho em ordem inversa
+            Node *path[256];
+            int path_size = 0;
             for (char v = target_vertex; v != '\0'; v = predecessors[(int)v])
+                path[path_size++] = get_node_by_vertex(graph->list, v);
+
+            // Percorre o caminho para gerar instruções
+            int counter = 1;
+            for (int i = path_size - 2; i >= 0; i--)
             {
-                path[path_index++] = v;
+                Node *current_node = path[i + 1];
+                Node *next_node = path[i];
+                Edge *current_edge = get_edge_by_dst_vertex(current_node, next_node->vertex);
+                Edge *next_edge = (i > 0) ? get_edge_by_dst_vertex(next_node, path[i - 1]->vertex) : NULL;
+
+                char *instruction = (next_edge != NULL)
+                                        ? get_instruction_from_orientation_diff(current_edge->direction, next_edge->direction)
+                                        : NULL;
+
+                // Determina a rua adjacente
+                char *adjacent_street = (strcmp(next_node->street_1, current_edge->street) != 0)
+                                            ? next_node->street_1
+                                            : next_node->street_2;
+
+                // Imprime instruções de acordo com a existência de uma próxima aresta
+                printf("    (%d) Siga em frente pela %s até o cruzamento com a %s\n", counter, current_edge->street, adjacent_street);
+                counter++;
+
+                if (next_edge != NULL)
+                {
+                    printf("    (%d) No cruzamento da %s com a %s, %s\n", counter, current_edge->street, adjacent_street, instruction);
+                    counter++;
+                    free(instruction);
+                }
+                else
+                {
+                    printf("Você chegou ao seu destino!\n");
+                }
             }
-            for (int i = path_index - 1; i >= 0; i--)
-            {
-                printf("%c", path[i]);
-                if (i > 0)
-                    printf(" -> ");
-            }
-            printf("\n");
+
             done = true;
         }
+
         else
         {
             // Atualiza os custos para os vértices adjacentes.
