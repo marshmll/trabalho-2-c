@@ -1,9 +1,11 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <stdio.h>
 #include <stdlib.h>
-#include <float.h>
 #include <stdbool.h>
+#include <ctype.h>
+#include <float.h>
 #include <string.h>
 
 #include "input.h"
@@ -71,6 +73,6 @@ void free_node_list(NodeList *list);
 
 void free_nodes(Node *head);
 
-void find_shortest_path_between(Graph *graph, char start_vertex, char target_vertex);
+void print_shortest_path_between(Graph *graph, char start_vertex, char target_vertex);
 
 #endif

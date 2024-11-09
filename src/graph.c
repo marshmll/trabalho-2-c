@@ -42,7 +42,7 @@ char *get_instruction_from_orientation_diff(char *orientation_1, char *orientati
     char *direction = (char *)calloc(MAX_STR_LEN, sizeof(char));
 
     if (strcmp(orientation_1, orientation_2) == 0)
-        strcpy(direction, "mantenha-se na mesma direção.");
+        strcpy(direction, "mantenha-se em frente.");
     else
     {
         if (strcmp(orientation_1, "Norte") == 0 && strcmp(orientation_2, "Leste") == 0)
@@ -101,7 +101,7 @@ void free_nodes(Node *head)
     }
 }
 
-void find_shortest_path_between(Graph *graph, char start_vertex, char target_vertex)
+void print_shortest_path_between(Graph *graph, char start_vertex, char target_vertex)
 {
     // Vetor para armazenar custos de salto
     float costs[256];
@@ -155,8 +155,12 @@ void find_shortest_path_between(Graph *graph, char start_vertex, char target_ver
 
         if (current_vertex == target_vertex)
         {
-            printf("Menor distância entre %c e %c: %.2f\n", start_vertex, target_vertex, costs[(int)current_vertex]);
-            printf("Caminho:\n");
+            Node *start_node = get_node_by_vertex(graph->list, start_vertex);
+            Node *target_node = get_node_by_vertex(graph->list, target_vertex);
+
+            printf("Para realizar o percurso entre o ponto %c (%s com %s) e o ponto %c (%s com %s), faça os seguintes movimentos:\n",
+                   start_vertex, start_node->street_1, start_node->street_2,
+                   target_vertex, target_node->street_1, target_node->street_2);
 
             // Armazena o caminho em ordem inversa
             Node *path[256];
@@ -191,10 +195,6 @@ void find_shortest_path_between(Graph *graph, char start_vertex, char target_ver
                     printf("    (%d) No cruzamento da %s com a %s, %s\n", counter, current_edge->street, adjacent_street, instruction);
                     counter++;
                     free(instruction);
-                }
-                else
-                {
-                    printf("Você chegou ao seu destino!\n");
                 }
             }
 

@@ -5,8 +5,8 @@ NodeList *parse_data_from_bin_file(const char *filename)
     FILE *bin_file = fopen(filename, "rb");
     if (!bin_file)
     {
-        perror("Failed to open binary file");
-        return NULL;
+        printf("Não foi possível abrir o arquivo: %s\n", filename);
+        exit(EXIT_FAILURE);
     }
 
     NodeList *list = (NodeList *)calloc(1, sizeof(NodeList));
