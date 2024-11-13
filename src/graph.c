@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "graph.h"
 
 Graph *create_graph()
@@ -110,23 +109,23 @@ void free_nodes(Node *head)
 void print_shortest_path_between(Graph *graph, char start_vertex, char target_vertex)
 {
     // Vetor para armazenar custos de salto
-    float costs[256];
-    for (int i = 0; i < 256; ++i)
+    float costs[MAX_ASCII_CHARS];
+    for (int i = 0; i < MAX_ASCII_CHARS; ++i)
         costs[i] = FLT_MAX;
 
     // Vetor para armazenar quais vértices foram visitados
-    bool visited[256] = {false};
+    bool visited[MAX_ASCII_CHARS] = {false};
 
     // Vetor para armazenar quais são os vértices predecessores.
-    char predecessors[256];
-    for (int i = 0; i < 256; ++i)
+    char predecessors[MAX_ASCII_CHARS];
+    for (int i = 0; i < MAX_ASCII_CHARS; ++i)
         predecessors[i] = '\0';
 
     // Inicializa o vértice de partida como custo 0.
     costs[(int)start_vertex] = 0;
 
     // Vetor para armazenar a fila de prioridade.
-    char priority_queue[256];
+    char priority_queue[MAX_ASCII_CHARS];
     int queue_size = 0;
 
     // Insere o vértice de partida na fila de prioridade.
@@ -171,7 +170,7 @@ void print_shortest_path_between(Graph *graph, char start_vertex, char target_ve
                    start_vertex, start_node->street_1, start_node->street_2,
                    target_vertex, target_node->street_1, target_node->street_2);
 
-            Node *path[256];
+            Node *path[MAX_ASCII_CHARS];
             int path_size = 0;
 
             // Armazena o caminho em ordem inversa. Inicia no vértice alvo e
